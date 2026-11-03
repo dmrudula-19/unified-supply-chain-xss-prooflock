@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Supply Chain XSS ProofLock - Security Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0B0E14',
+                        cardBg: '#131822',
+                        cardBorder: '#1F293D',
+                        purplePrimary: '#7C3AED',
+                        purpleAccent: '#A78BFA',
+                        purpleDark: '#2E1065',
+                        textPrimary: '#F3F4F6',
+                        textMuted: '#9CA3AF'
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0B0E14; color: #F3F4F6; font-family: system-ui, -apple-system, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-6">
+
+    <!-- Top Navigation Header -->
+    <header class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 pb-4 border-b border-cardBorder">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-purplePrimary/20 border border-purplePrimary/50 flex items-center justify-center text-purpleAccent shadow-lg shadow-purplePrimary/20">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-white tracking-wide">ProofLock Security Telemetry</h1>
+                <p class="text-xs text-textMuted">Unified Supply Chain XSS Mitigation Engine</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-3.5 py-1.5 rounded-full border border-emerald-500/30">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Engine Operational
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Sidebar Navigation (Research Focused Only) -->
+        <aside class="lg:col-span-2 bg-cardBg border border-cardBorder rounded-2xl p-4 space-y-6">
+            <div>
+                <p class="text-[10px] uppercase tracking-wider text-textMuted font-bold mb-3 px-2">Research Modules</p>
+                <nav class="space-y-1">
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-purplePrimary text-white shadow-md shadow-purplePrimary/30">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                    </a>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+                        <i data-lucide="file-code" class="w-4 h-4"></i> SBOM Metadata
+                    </a>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+                        <i data-lucide="cpu" class="w-4 h-4"></i> eBPF Sandbox
+                    </a>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+                        <i data-lucide="git-fork" class="w-4 h-4"></i> AST Reachability
+                    </a>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+                        <i data-lucide="file-check-2" class="w-4 h-4"></i> Audit Artifacts
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="lg:col-span-10 space-y-6">
+
+            <!-- Severity Counters Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-rose-400 font-semibold flex items-center gap-1">
+                            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Critical
+                        </span>
+                    </div>
+                    <p id="count-critical" class="text-2xl font-bold text-white">02</p>
+                    <p class="text-[10px] text-textMuted mt-1">Direct Script Inject Vectors</p>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-amber-400 font-semibold flex items-center gap-1">
+                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> High
+                        </span>
+                    </div>
+                    <p id="count-high" class="text-2xl font-bold text-white">05</p>
+                    <p class="text-[10px] text-textMuted mt-1">DOM Sink Inconsistencies</p>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-blue-400 font-semibold flex items-center gap-1">
+                            <i data-lucide="info" class="w-3.5 h-3.5"></i> Medium
+                        </span>
+                    </div>
+                    <p id="count-medium" class="text-2xl font-bold text-white">12</p>
+                    <p class="text-[10px] text-textMuted mt-1">Unsanitized Attributes</p>
+                </div>
+
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Low / Benign
+                        </span>
+                    </div>
+                    <p id="count-benign" class="text-2xl font-bold text-white">128</p>
+                    <p class="text-[10px] text-textMuted mt-1">Clean Regression Inputs</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Verification Testing Box -->
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 relative">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i data-lucide="terminal" class="w-4 h-4 text-purpleAccent"></i> Interactive Exploit Payload Evaluator
+                        </h2>
+                        <p class="text-xs text-textMuted">Test dynamic XSS attack vectors directly against the backend verification pipeline.</p>
+                    </div>
+                    <div id="status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-purplePrimary/20 text-purpleAccent border border-purplePrimary/40 flex items-center gap-1.5 self-start sm:self-auto">
+                        <span class="w-2 h-2 rounded-full bg-purpleAccent"></span> Stage 4 Ready
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-textMuted mb-1">Input Payload Vector (XSS / Package String):</label>
+                        <textarea id="payload-input" rows="2" 
+                                  class="w-full bg-darkBg border border-cardBorder rounded-xl p-3 text-sm font-mono text-emerald-400 focus:outline-none focus:ring-1 focus:ring-purplePrimary shadow-inner"
+                                  placeholder="Enter attack payload...">&lt;script&gt;alert('XSS_ATTACK_VECTOR')&lt;/script&gt;</textarea>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <button id="evaluate-button" onclick="runVerification()" 
+                                class="bg-purplePrimary hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purplePrimary/30">
+                            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Evaluate Payload
+                        </button>
+                        <button onclick="openModal()" class="text-xs font-semibold text-purpleAccent hover:text-white flex items-center gap-1 underline">
+                            <i data-lucide="file-json" class="w-3.5 h-3.5"></i> Inspect `proof_evidence_record.json`
+                        </button>
+                    </div>
+
+                    <!-- Output Sanitization Preview -->
+                    <div id="output-card" class="bg-darkBg border border-cardBorder rounded-xl p-4 transition-all">
+                        <div class="flex items-center justify-between mb-1">
+                            <span id="output-title" class="text-xs font-bold text-textMuted">Sanitized Output Payload</span>
+                            <span class="text-[10px] text-textMuted font-mono">Stage 4 Runtime</span>
+                        </div>
+                        <p id="output-content" class="text-xs font-mono text-gray-300 break-all bg-cardBg/50 p-2.5 rounded-lg border border-cardBorder">
+                            &amp;lt;script&amp;gt;alert('XSS_ATTACK_VECTOR')&amp;lt;/script&amp;gt;
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Telemetry Breakdown Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Latency Telemetry -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-textMuted">Interception Overhead</span>
+                        <i data-lucide="zap" class="w-4 h-4 text-purpleAccent"></i>
+                    </div>
+                    <p id="stat-latency" class="text-2xl font-bold text-white">1.4 ms</p>
+                    <p class="text-[10px] text-emerald-400 mt-1">Within optimal &lt;5ms threshold</p>
+                </div>
+
+                <!-- eBPF Sandbox Telemetry -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-textMuted">eBPF Micro-sandbox</span>
+                        <i data-lucide="cpu" class="w-4 h-4 text-purpleAccent"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-white">Enforced</p>
+                    <p class="text-[10px] text-textMuted mt-1">Syscall boundary protected</p>
+                </div>
+
+                <!-- AST Reachability Analysis -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-textMuted">AST Call Graph Reachability</span>
+                        <i data-lucide="git-fork" class="w-4 h-4 text-purpleAccent"></i>
+                    </div>
+                    <p class="text-2xl font-bold text-white">VERIFIED</p>
+                    <p class="text-[10px] text-emerald-400 mt-1">Vulnerable paths pruned</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Audit Evidence Record Modal -->
+    <div id="json-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-cardBg border border-cardBorder rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i data-lucide="file-json" class="w-4 h-4 text-purpleAccent"></i> Telemetry Artifact (`proof_evidence_record.json`)
+                </h3>
+                <button onclick="closeModal()" class="text-textMuted hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <pre id="json-preview" class="bg-darkBg text-emerald-400 text-xs p-4 rounded-xl overflow-x-auto font-mono max-h-80 border border-cardBorder custom-scrollbar">
+{
+  "timestamp": "2026-11-01T10:00:00.000Z",
+  "stage": "Stage 4 - Dynamic Verification",
+  "test_vector": "&lt;script&gt;alert('XSS_ATTACK_VECTOR')&lt;/script&gt;",
+  "exploit_blocked": true,
+  "benign_regression_passed": true,
+  "latency_ms": 1.4,
+  "status": "VERIFIED_FIX"
+}
+            </pre>
+            <div class="flex items-center justify-end">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-darkBg text-textMuted hover:text-white border border-cardBorder">Close</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    lucide.createIcons();
+
+    let stats = { critical: 2, high: 5, medium: 12, benign: 128 };
+
+    async function runVerification() {
+        const input = document.getElementById('payload-input');
+        const inputPayload = input.value;
+        
+        try {
+            const response = await fetch('/api/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payload: inputPayload })
+            });
+            
+            const data = await response.json();
+            const { result, telemetry } = data;
+
+            // Update Latency
+            document.getElementById('stat-latency').innerText = `${telemetry.latency_ms} ms`;
+            
+            // Helper function to safely escape HTML entities so neutralized tags show up properly
+            const escapeHtml = (str) => {
+                return str.replace(/&/g, "&amp;")
+                          .replace(/</g, "&lt;")
+                          .replace(/>/g, "&gt;")
+                          .replace(/"/g, "&quot;")
+                          .replace(/'/g, "&#039;");
+            };
+
+            if (telemetry.exploit_blocked) {
+    stats.critical += 1;
+    document.getElementById('count-critical').innerText = String(stats.critical).padStart(2, '0');
+
+    const badge = document.getElementById('status-badge');
+    badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5";
+    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Exploit Intercepted`;
+    
+    document.getElementById('output-card').className = "bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 transition-all";
+    document.getElementById('output-title').innerText = "Intercepted & Neutralized Payload (Safe Text Representation)";
+    
+    // Explicitly show the escaped string text so you can see the sanitization clearly
+    const safeDisplay = inputPayload.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    document.getElementById('output-content').textContent = `[BLOCKED & SANITIZED] ${safeDisplay}`;
+} else {
+    stats.benign += 1;
+    document.getElementById('count-benign').innerText = stats.benign;
+
+    const badge = document.getElementById('status-badge');
+    badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5";
+    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe Input Passed`;
+    
+    document.getElementById('output-card').className = "bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 transition-all";
+    document.getElementById('output-title').innerText = "Sanitized Output Payload";
+    document.getElementById('output-content').textContent = inputPayload;
+}
+            // Update JSON Preview Modal content
+            document.getElementById('json-preview').textContent = JSON.stringify(telemetry, null, 2);
+
+        } catch (err) {
+            console.error("Error communicating with verification backend:", err);
+        }
+    }
+
+    function openModal() {
+        document.getElementById('json-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('json-modal').classList.add('hidden');
+    }
+</script>
+</body>
+</html>

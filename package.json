@@ -1,0 +1,28 @@
+{
+  "name": "unified-supply-chain-xss-prooflock",
+  "version": "1.0.0",
+  "description": "Research pipeline for unified supply-chain security and XSS ProofLock verification",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmrudula-19/unified-supply-chain-xss-prooflock.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dmrudula-19/unified-supply-chain-xss-prooflock/issues"
+  },
+  "homepage": "https://github.com/dmrudula-19/unified-supply-chain-xss-prooflock#readme",
+  "dependencies": {
+    "express": "^5.3.0",
+    "playwright": "^1.64.1"
+  }
+}
