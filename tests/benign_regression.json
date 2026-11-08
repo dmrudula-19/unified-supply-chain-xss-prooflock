@@ -1,0 +1,28 @@
+{
+  "regression_cases": [
+    {
+      "id": "REG-001",
+      "category": "Markdown Formatting",
+      "input": "**Bold heading** with *italics* and `inline code`.",
+      "expected": "RENDERED_SAFE"
+    },
+    {
+      "id": "REG-002",
+      "category": "HTML Entities",
+      "input": "Price is 5 &lt; 10 &amp; stock is &gt; 0.",
+      "expected": "RENDERED_SAFE"
+    },
+    {
+      "id": "REG-003",
+      "category": "Dependency Version String",
+      "input": "lodash@^4.17.21",
+      "expected": "RENDERED_SAFE"
+    },
+    {
+      "id": "REG-004",
+      "category": "Safe URL Path",
+      "input": "/api/v1/dashboard/telemetry?user=admin",
+      "expected": "RENDERED_SAFE"
+    }
+  ]
+}

@@ -117,6 +117,73 @@ app.post('/api/vulnerable-sink', (req, res) => {
         });
     }
 });
+
+const { generateRemediationPatch } = require('../engine/patch_generator');
+
+// API endpoint to generate patches for vulnerabilities
+app.post('/api/remediate', (req, res) => {
+    const { vulnerabilityType, unsafeSnippet } = req.body;
+    
+    if (!vulnerabilityType || !unsafeSnippet) {
+        return res.status(400).json({ error: "Missing vulnerabilityType or unsafeSnippet in request body." });
+    }
+
+    const patchResult = generateRemediationPatch(vulnerabilityType, unsafeSnippet);
+    
+    return res.status(200).json({
+        status: "SUCCESS",
+        remediation: patchResult
+    });
+});
+
+const { analyzeManifest } = require('../engine/dependency_analyzer');
+
+// API endpoint to audit project dependencies
+app.get('/api/audit-dependencies', (req, res) => {
+    const manifestPath = path.join(__dirname, '../../package.json');
+    const auditReport = analyzeManifest(manifestPath);
+    
+    return res.status(200).json({
+        status: "SUCCESS",
+        report: auditReport
+    });
+});
+
+const { checkRegistryMetadata } = require('../engine/maintainer_risk');
+
+// API endpoint to check npm maintainer and registry metadata risks
+app.post('/api/registry-check', async (req, res) => {
+    const { packageName } = req.body;
+    
+    if (!packageName) {
+        return res.status(400).json({ error: "Missing packageName in request body." });
+    }
+
+    const registryReport = await checkRegistryMetadata(packageName);
+    
+    return res.status(200).json({
+        status: "SUCCESS",
+        registryAudit: registryReport
+    });
+});
+
+const { runSandboxTest } = require('../engine/sandbox_runner');
+
+// API endpoint to test package installation in a Docker sandbox
+app.post('/api/sandbox-install', (req, res) => {
+    const { packageName } = req.body;
+    
+    if (!packageName) {
+        return res.status(400).json({ error: "Missing packageName in request body." });
+    }
+
+    runSandboxTest(packageName, (result) => {
+        return res.status(200).json({
+            status: "SUCCESS",
+            sandboxTelemetry: result
+        });
+    });
+});
 // Start the server
 app.listen(PORT, () => {
     console.log(`[✓] ProofLock Research Backend running at http://localhost:${PORT}`);
