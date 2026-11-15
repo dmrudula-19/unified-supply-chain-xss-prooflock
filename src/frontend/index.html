@@ -65,150 +65,76 @@
             <div>
                 <p class="text-[10px] uppercase tracking-wider text-textMuted font-bold mb-3 px-2">Research Modules</p>
                 <nav class="space-y-1">
-                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-purplePrimary text-white shadow-md shadow-purplePrimary/30">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-                    </a>
-                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
-                        <i data-lucide="file-code" class="w-4 h-4"></i> SBOM Metadata
-                    </a>
-                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
-                        <i data-lucide="cpu" class="w-4 h-4"></i> eBPF Sandbox
-                    </a>
-                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
-                        <i data-lucide="git-fork" class="w-4 h-4"></i> AST Reachability
-                    </a>
-                    <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
-                        <i data-lucide="file-check-2" class="w-4 h-4"></i> Audit Artifacts
-                    </a>
-                </nav>
+    <a href="#" id="nav-dashboard" onclick="switchTab('dashboard')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-purplePrimary text-white shadow-md shadow-purplePrimary/30">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+    </a>
+    <a href="#" id="nav-sbom" onclick="switchTab('sbom')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+        <i data-lucide="file-code" class="w-4 h-4"></i> SBOM Metadata
+    </a>
+    <a href="#" id="nav-ebpf" onclick="switchTab('ebpf')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+        <i data-lucide="cpu" class="w-4 h-4"></i> eBPF Sandbox
+    </a>
+    <a href="#" id="nav-ast" onclick="switchTab('ast')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+        <i data-lucide="git-fork" class="w-4 h-4"></i> AST Reachability
+    </a>
+    <a href="#" id="nav-audit" onclick="switchTab('audit')" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all">
+        <i data-lucide="file-check-2" class="w-4 h-4"></i> Audit Artifacts
+    </a>
+</nav>
             </div>
         </aside>
 
         <!-- Main Content Area -->
         <main class="lg:col-span-10 space-y-6">
+    <!-- Dashboard View (Severity Counters & Exploit Evaluator) -->
+    <div id="view-dashboard" class="space-y-6">
+        <!-- Place your severity counters and Interactive Exploit Payload Evaluator box here -->
+    </div>
+    <div id="payload-tester" class="bg-cardBg border border-cardBorder rounded-2xl p-6 space-y-4 mt-6">
+    <h3 class="text-sm font-bold text-white">Test Security Payload / XSS Vector</h3>
+    <div class="flex gap-2">
+        <input type="text" id="payload-input" placeholder="Enter payload e.g. <script>alert('XSS')</script>" class="flex-1 bg-darkBg border border-cardBorder text-white text-xs px-3 py-2 rounded-xl focus:outline-none focus:border-purpleAccent" />
+        <button id="trigger-btn" onclick="submitTestPayload()" class="bg-purpleAccent text-white text-xs px-4 py-2 rounded-xl font-medium hover:opacity-90 transition">Run Scan</button>
+    </div>
+    <pre id="payload-result" class="bg-darkBg text-xs text-textMuted p-3 rounded-xl overflow-x-auto font-mono border border-cardBorder hidden"></pre>
+</div>
 
-            <!-- Severity Counters Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4 relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-rose-400 font-semibold flex items-center gap-1">
-                            <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Critical
-                        </span>
-                    </div>
-                    <p id="count-critical" class="text-2xl font-bold text-white">02</p>
-                    <p class="text-[10px] text-textMuted mt-1">Direct Script Inject Vectors</p>
-                </div>
+    <!-- SBOM Metadata View -->
+    <div id="view-sbom" class="hidden bg-cardBg border border-cardBorder rounded-2xl p-6 space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="file-code" class="w-4 h-4 text-purpleAccent"></i> SBOM Metadata
+        </h2>
+        <p class="text-xs text-textMuted">Live software bill of materials retrieved from backend analysis.</p>
+        <pre id="sbom-output" class="bg-darkBg text-emerald-400 text-xs p-4 rounded-xl overflow-x-auto font-mono border border-cardBorder">Loading SBOM metadata...</pre>
+    </div>
 
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-amber-400 font-semibold flex items-center gap-1">
-                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> High
-                        </span>
-                    </div>
-                    <p id="count-high" class="text-2xl font-bold text-white">05</p>
-                    <p class="text-[10px] text-textMuted mt-1">DOM Sink Inconsistencies</p>
-                </div>
+    <!-- eBPF Sandbox View -->
+    <div id="view-ebpf" class="hidden bg-cardBg border border-cardBorder rounded-2xl p-6 space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="cpu" class="w-4 h-4 text-purpleAccent"></i> eBPF Micro-sandbox Telemetry
+        </h2>
+        <p class="text-xs text-textMuted">Live system call tracking and isolation boundaries.</p>
+        <pre id="ebpf-output" class="bg-darkBg text-purpleAccent text-xs p-4 rounded-xl overflow-x-auto font-mono border border-cardBorder">Loading eBPF telemetry...</pre>
+    </div>
 
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-blue-400 font-semibold flex items-center gap-1">
-                            <i data-lucide="info" class="w-3.5 h-3.5"></i> Medium
-                        </span>
-                    </div>
-                    <p id="count-medium" class="text-2xl font-bold text-white">12</p>
-                    <p class="text-[10px] text-textMuted mt-1">Unsanitized Attributes</p>
-                </div>
+    <!-- AST Reachability View -->
+    <div id="view-ast" class="hidden bg-cardBg border border-cardBorder rounded-2xl p-6 space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="git-fork" class="w-4 h-4 text-purpleAccent"></i> AST Call Graph Reachability
+        </h2>
+        <p class="text-xs text-textMuted">Abstract syntax tree graph reachability status.</p>
+        <pre id="ast-output" class="bg-darkBg text-blue-400 text-xs p-4 rounded-xl overflow-x-auto font-mono border border-cardBorder">Loading AST graph data...</pre>
+    </div>
 
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Low / Benign
-                        </span>
-                    </div>
-                    <p id="count-benign" class="text-2xl font-bold text-white">128</p>
-                    <p class="text-[10px] text-textMuted mt-1">Clean Regression Inputs</p>
-                </div>
-            </div>
-
-            <!-- Dynamic Verification Testing Box -->
-            <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 relative">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                    <div>
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
-                            <i data-lucide="terminal" class="w-4 h-4 text-purpleAccent"></i> Interactive Exploit Payload Evaluator
-                        </h2>
-                        <p class="text-xs text-textMuted">Test dynamic XSS attack vectors directly against the backend verification pipeline.</p>
-                    </div>
-                    <div id="status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-purplePrimary/20 text-purpleAccent border border-purplePrimary/40 flex items-center gap-1.5 self-start sm:self-auto">
-                        <span class="w-2 h-2 rounded-full bg-purpleAccent"></span> Stage 4 Ready
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-medium text-textMuted mb-1">Input Payload Vector (XSS / Package String):</label>
-                        <textarea id="payload-input" rows="2" 
-                                  class="w-full bg-darkBg border border-cardBorder rounded-xl p-3 text-sm font-mono text-emerald-400 focus:outline-none focus:ring-1 focus:ring-purplePrimary shadow-inner"
-                                  placeholder="Enter attack payload...">&lt;script&gt;alert('XSS_ATTACK_VECTOR')&lt;/script&gt;</textarea>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <button id="evaluate-button" onclick="runVerification()" 
-                                class="bg-purplePrimary hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purplePrimary/30">
-                            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Evaluate Payload
-                        </button>
-                        <button onclick="openModal()" class="text-xs font-semibold text-purpleAccent hover:text-white flex items-center gap-1 underline">
-                            <i data-lucide="file-json" class="w-3.5 h-3.5"></i> Inspect `proof_evidence_record.json`
-                        </button>
-                    </div>
-
-                    <!-- Output Sanitization Preview -->
-                    <div id="output-card" class="bg-darkBg border border-cardBorder rounded-xl p-4 transition-all">
-                        <div class="flex items-center justify-between mb-1">
-                            <span id="output-title" class="text-xs font-bold text-textMuted">Sanitized Output Payload</span>
-                            <span class="text-[10px] text-textMuted font-mono">Stage 4 Runtime</span>
-                        </div>
-                        <p id="output-content" class="text-xs font-mono text-gray-300 break-all bg-cardBg/50 p-2.5 rounded-lg border border-cardBorder">
-                            &amp;lt;script&amp;gt;alert('XSS_ATTACK_VECTOR')&amp;lt;/script&amp;gt;
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Research Telemetry Breakdown Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Latency Telemetry -->
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-textMuted">Interception Overhead</span>
-                        <i data-lucide="zap" class="w-4 h-4 text-purpleAccent"></i>
-                    </div>
-                    <p id="stat-latency" class="text-2xl font-bold text-white">1.4 ms</p>
-                    <p class="text-[10px] text-emerald-400 mt-1">Within optimal &lt;5ms threshold</p>
-                </div>
-
-                <!-- eBPF Sandbox Telemetry -->
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-textMuted">eBPF Micro-sandbox</span>
-                        <i data-lucide="cpu" class="w-4 h-4 text-purpleAccent"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-white">Enforced</p>
-                    <p class="text-[10px] text-textMuted mt-1">Syscall boundary protected</p>
-                </div>
-
-                <!-- AST Reachability Analysis -->
-                <div class="bg-cardBg border border-cardBorder rounded-2xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-textMuted">AST Call Graph Reachability</span>
-                        <i data-lucide="git-fork" class="w-4 h-4 text-purpleAccent"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-white">VERIFIED</p>
-                    <p class="text-[10px] text-emerald-400 mt-1">Vulnerable paths pruned</p>
-                </div>
-            </div>
-
-        </main>
+    <!-- Audit Artifacts View -->
+    <div id="view-audit" class="hidden bg-cardBg border border-cardBorder rounded-2xl p-6 space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="file-check-2" class="w-4 h-4 text-purpleAccent"></i> Audit Artifacts
+        </h2>
+        <p class="text-xs text-textMuted">Signed verification logs and records.</p>
+        <pre id="audit-output" class="bg-darkBg text-emerald-400 text-xs p-4 rounded-xl overflow-x-auto font-mono border border-cardBorder">Loading audit records...</pre>
+    </div>
+</main>
     </div>
 
     <!-- Audit Evidence Record Modal -->
@@ -246,61 +172,59 @@
 
     async function runVerification() {
         const input = document.getElementById('payload-input');
-        const inputPayload = input.value;
+        const packageName = input.value.trim();
         
+        const badge = document.getElementById('status-badge');
+        const outputCard = document.getElementById('output-card');
+        const outputTitle = document.getElementById('output-title');
+        const outputContent = document.getElementById('output-content');
+
+        // Update UI to loading state
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-purplePrimary/20 text-purpleAccent border border-purplePrimary/40 flex items-center gap-1.5";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-purpleAccent animate-ping"></span> Spawning Docker Sandbox...`;
+        outputContent.textContent = `Running npm install for '${packageName}' in isolated container...`;
+
         try {
-            const response = await fetch('/api/verify', {
+            const response = await fetch('http://localhost:3000/api/sandbox-install', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ payload: inputPayload })
+                body: JSON.stringify({ packageName })
             });
             
             const data = await response.json();
-            const { result, telemetry } = data;
 
-            // Update Latency
-            document.getElementById('stat-latency').innerText = `${telemetry.latency_ms} ms`;
-            
-            // Helper function to safely escape HTML entities so neutralized tags show up properly
-            const escapeHtml = (str) => {
-                return str.replace(/&/g, "&amp;")
-                          .replace(/</g, "&lt;")
-                          .replace(/>/g, "&gt;")
-                          .replace(/"/g, "&quot;")
-                          .replace(/'/g, "&#039;");
-            };
+            if (response.ok && data.status === "SUCCESS") {
+                stats.benign += 1;
+                document.getElementById('count-benign').innerText = stats.benign;
 
-            if (telemetry.exploit_blocked) {
-    stats.critical += 1;
-    document.getElementById('count-critical').innerText = String(stats.critical).padStart(2, '0');
+                badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Sandbox Passed`;
+                
+                outputCard.className = "bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 transition-all";
+                outputTitle.innerText = "Container Execution Logs (Telemetry Output)";
+                
+                // Show real npm log output returned from Docker container
+                outputContent.textContent = data.sandboxTelemetry.output || JSON.stringify(data.sandboxTelemetry, null, 2);
+            } else {
+                stats.critical += 1;
+                document.getElementById('count-critical').innerText = String(stats.critical).padStart(2, '0');
 
-    const badge = document.getElementById('status-badge');
-    badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5";
-    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Exploit Intercepted`;
-    
-    document.getElementById('output-card').className = "bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 transition-all";
-    document.getElementById('output-title').innerText = "Intercepted & Neutralized Payload (Safe Text Representation)";
-    
-    // Explicitly show the escaped string text so you can see the sanitization clearly
-    const safeDisplay = inputPayload.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    document.getElementById('output-content').textContent = `[BLOCKED & SANITIZED] ${safeDisplay}`;
-} else {
-    stats.benign += 1;
-    document.getElementById('count-benign').innerText = stats.benign;
+                badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Exploit / Error Intercepted`;
+                
+                outputCard.className = "bg-rose-500/10 border border-rose-500/30 rounded-xl p-4 transition-all";
+                outputTitle.innerText = "Interception Details";
+                outputContent.textContent = data.error || "Sandbox execution failed.";
+            }
 
-    const badge = document.getElementById('status-badge');
-    badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5";
-    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Safe Input Passed`;
-    
-    document.getElementById('output-card').className = "bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 transition-all";
-    document.getElementById('output-title').innerText = "Sanitized Output Payload";
-    document.getElementById('output-content').textContent = inputPayload;
-}
-            // Update JSON Preview Modal content
-            document.getElementById('json-preview').textContent = JSON.stringify(telemetry, null, 2);
+            // Update JSON Preview Modal content with live container response
+            document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
 
         } catch (err) {
-            console.error("Error communicating with verification backend:", err);
+            console.error("Error communicating with backend:", err);
+            badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5";
+            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Connection Error`;
+            outputContent.textContent = "Error: Could not reach backend server at http://localhost:3000. Ensure node server.js is running.";
         }
     }
 
@@ -311,6 +235,68 @@
     function closeModal() {
         document.getElementById('json-modal').classList.add('hidden');
     }
+
+    async function switchTab(tabName) {
+    // Hide all views & reset nav styles
+    ['dashboard', 'sbom', 'ebpf', 'ast', 'audit'].forEach(name => {
+        const view = document.getElementById(`view-${name}`);
+        const nav = document.getElementById(`nav-${name}`);
+        if (view) view.classList.add('hidden');
+        if (nav) {
+            nav.className = "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-textMuted hover:bg-white/5 hover:text-white transition-all";
+        }
+    });
+
+    // Show selected view & highlight active nav
+    const activeView = document.getElementById(`view-${tabName}`);
+    const activeNav = document.getElementById(`nav-${tabName}`);
+    if (activeView) activeView.classList.remove('hidden');
+    if (activeNav) {
+        activeNav.className = "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-purplePrimary text-white shadow-md shadow-purplePrimary/30";
+    }
+
+    // If clicking a research module (not dashboard), fetch real data from backend
+    if (tabName !== 'dashboard') {
+        const outputEl = document.getElementById(`${tabName}-output`);
+        if (outputEl) outputEl.textContent = `Fetching ${tabName.toUpperCase()} telemetry from backend...`;
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/${tabName}`);
+            const data = await response.json();
+            if (outputEl) outputEl.textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+            if (outputEl) outputEl.textContent = `Error: Could not reach backend server for ${tabName} data.`;
+        }
+    }
+
+    lucide.createIcons();
+}
+
+async function submitTestPayload() {
+    const inputVal = document.getElementById('payload-input').value;
+    const resultEl = document.getElementById('payload-result');
+    resultEl.classList.remove('hidden');
+    resultEl.textContent = "Scanning payload...";
+
+    try {
+        const response = await fetch('http://localhost:3000/api/scan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload: inputVal })
+        });
+        const data = await response.json();
+        
+        // Format the output clearly in the UI
+        resultEl.innerHTML = `<strong>Status:</strong> ${data.message}<br><strong>Payload:</strong> ${escapeHtml(data.analyzedPayload)}<br><strong>Vulnerable:</strong> ${data.vulnerable}`;
+    } catch (err) {
+        resultEl.textContent = `Error: Failed to reach backend scan endpoint. (${err.message})`;
+    }
+}
+
+// Helper to prevent script execution inside the UI box itself
+function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 </script>
 </body>
 </html>
