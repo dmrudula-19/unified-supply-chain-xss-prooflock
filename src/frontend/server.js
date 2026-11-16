@@ -294,6 +294,19 @@ app.post('/api/scan', (req, res) => {
     });
 })
 
+const astParser = require('./ast-engine/Parser.js'); 
+
+app.post('/api/analyze-ast', (req, res) => {
+  try {
+    const { filePath } = req.body;
+    // Run the AST analysis engine on the target file
+    const analysisResult = astParser.analyze(filePath || './src/frontend/server.js');
+    res.json({ success: true, result: analysisResult });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`[✓] ProofLock Research Backend running at http://localhost:${PORT}`);

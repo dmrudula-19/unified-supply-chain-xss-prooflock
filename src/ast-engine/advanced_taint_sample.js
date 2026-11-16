@@ -1,5 +1,6 @@
-
 const userInput = location.search;
+// Dynamic version (accepts the file path from Python)
+const filePath = process.argv[2] || './sample.js';
 
 // Test 1: Variable-to-variable propagation
 const firstValue = userInput;
@@ -21,7 +22,7 @@ document.write(pageContent);
 
 // Test 5: Reassignment with safe data
 let reassignedValue = location.search;
-
 reassignedValue = "This is safe data";
+document.getElementById("safeOutput").innerHTML = reassignedValue;
 
 document.getElementById("safeOutput").innerHTML = reassignedValue;

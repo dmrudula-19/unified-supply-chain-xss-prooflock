@@ -1,11 +1,14 @@
-﻿
-const fs = require("fs");
+﻿const fs = require("fs");
 const parser = require("@babel/parser");
 const traverse = require("@babel/traverse").default;
 
-const filePath = __dirname + "/advanced_taint_sample.js";
-const code = fs.readFileSync(filePath, "utf8");
+const path = require("path");
 
+// Accept the file path from Python (process.argv[2]), fallback to sample.js if none provided
+const inputPath = process.argv[2] || "./sample.js";
+const filePath = path.resolve(process.cwd(), inputPath);
+
+const code = fs.readFileSync(filePath, "utf8");
 const ast = parser.parse(code, {
     sourceType: "unambiguous"
 });
